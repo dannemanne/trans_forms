@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/dannemanne/BlogDev.svg?branch=master)](https://travis-ci.org/dannemanne/BlogDev)
+
+[![Code Climate](https://codeclimate.com/github/dannemanne/trans_forms.png)](https://codeclimate.com/github/dannemanne/trans_forms)
+
 # TransForms
 
 TODO: Write a gem description
