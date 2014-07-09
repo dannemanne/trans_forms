@@ -12,6 +12,11 @@ class CreateTestSchema < ActiveRecord::Migration
       t.string "name"
       t.integer "age"
     end
+
+    create_table "phone_numbers", :force => true do |t|
+      t.integer "user_id"
+      t.string "number"
+    end
   end
 end
 

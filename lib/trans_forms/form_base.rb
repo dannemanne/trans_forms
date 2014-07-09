@@ -17,11 +17,7 @@ module TransForms
     include TransForms::Callbacks
 
     def save
-      if valid?
-        run_transaction
-      else
-        false
-      end
+      valid? && run_transaction
     end
 
     def save!
