@@ -4,7 +4,23 @@
 
 # TransForms
 
-TODO: Write a gem description
+TransForms is short for Transactional Forms. I created it mainly because I felt that
+the ActiveRecord Models all to often get cluttered with a lot of conditional validations
+and processing. As some of my models grew, I noticed that most of the mess was caused
+by complex validations and callbacks that were needed sometimes, and other times they
+were out of scope and had to be skipped, just to allow the record to be saved. I felt
+that there was another layer missing.
+
+By placing some of the logic and validations, that only needs to be processed in certain
+scenarios, into dedicated Form Models, the ActiveRecord Models got a lot cleaner. And
+in the process I gained more control of the save transaction. And the greatest benefit of
+this setup is the ability to easily update multiple records without having to rely on
+messy callbacks and exceptions association validations.
+
+This is the first extract of what I have been using in one of my projects. So far it
+is still missing some of the functionality I have in the original (like confirmation
+handling when conflicts occur) but the core is there. And more will come as I manage
+to detach it from the more specific business logic.
 
 ## Installation
 
