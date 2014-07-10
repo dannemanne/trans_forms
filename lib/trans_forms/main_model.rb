@@ -1,5 +1,3 @@
-require 'active_support/concern'
-
 module TransForms
   module MainModel
     extend ActiveSupport::Concern
@@ -29,7 +27,12 @@ module TransForms
       extend ActiveSupport::Concern
 
       included do
-        after_save_on_callback :assert_record_on_error
+        # Since the after_save_on_error is not part of this module, we make sure
+        # that the methods exist before calling it. It should not be necessary since
+        # the Callbacks module is included by default in the FormBase, but added
+        # anyway. If this module is included manually (like in one of the specs) then
+        # it prevents any error to occur.
+        after_save_on_error :assert_record_on_error if respond_to?(:after_save_on_error)
       end
 
       # Called from FormError to collect error messages from all possible
@@ -43,13 +46,48 @@ module TransForms
         @errors ||= FormErrors.new(self, super)
       end
 
+      # In it's default implementation, this method will look at the class name
+      # and try to match it to an attribute defined in the form model. If a match
+      # is found, then it will assign the model to that attribute.
+      #
+      # This method is encouraged to overwrite when there is custom conditions
+      # for how to handle the assignments.
+      #
+      # For example:
+      #
+      #   class UserUpdater < ApplicationTransForm
+      #     attr_accessor :admin
+      #     set_main_model :user
+      #
+      #     def model=(model)
+      #       if model.role == :admin
+      #         self.admin = model
+      #       else
+      #         self.user = model
+      #       end
+      #     end
+      #
+      #     # ...
+      #   end
+      #
+      def model=(model)
+        attr = model.class.model_name.underscore
+        if respond_to?("#{attr}=")
+          send("#{attr}=", model)
+        else
+          raise TransForms::NotImplementedError
+        end
+      end
+
+    protected
+
       # This method is assigned to the after_save_on_error callback
       #
       # If an error was raised in a create! statement then the variable might not
       # have been assigned and would prevent error messages to be displayed. This
       # makes sure that the instance that raised the error will be assigned if it
       # would have been the main model.
-      def assert_record_on_error
+      def assert_record_on_error(e)
         if e.respond_to?(:record) && e.record.present?
           record_name = e.record.class.name.underscore
           if main_models.is_a?(Array) && main_models.include?(record_name.to_sym) && send(record_name).nil?
@@ -64,39 +102,6 @@ module TransForms
         # set as the main model.
         def new_in_model(model, params = {})
           new(params.merge(model: model))
-        end
-
-        # In it's default implementation, this method will look at the class name
-        # and try to match it to an attribute defined in the form model. If a match
-        # is found, then it will assign the model to that attribute.
-        #
-        # This method is encouraged to overwrite when there is custom conditions
-        # for how to handle the assignments.
-        #
-        # For example:
-        #
-        #   class UserUpdater < ApplicationTransForm
-        #     attr_accessor :admin
-        #     set_main_model :user
-        #
-        #     def model=(model)
-        #       if model.role == :admin
-        #         self.admin = model
-        #       else
-        #         self.user = model
-        #       end
-        #     end
-        #
-        #     # ...
-        #   end
-        #
-        def model=(model)
-          attr = model.class.model_name.underscore
-          if respond_to?("#{attr}=")
-            send("#{attr}=", model)
-          else
-            raise TransForms::NotImplementedError
-          end
         end
 
       end
