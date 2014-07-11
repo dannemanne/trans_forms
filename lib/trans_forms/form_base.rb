@@ -1,9 +1,7 @@
 require 'virtus'
-require 'active_model/naming'
-require 'active_model/conversion'
-require 'active_model/translation'
-require 'active_model/validations'
-require 'active_model/validations/callbacks'
+
+# TODO: Determine the specific modules that needs to be loaded instead of rails/all
+require 'rails/all'
 
 module TransForms
   class FormBase

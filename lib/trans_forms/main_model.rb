@@ -71,9 +71,9 @@ module TransForms
       #   end
       #
       def model=(model)
-        attr = model.class.model_name.underscore
-        if respond_to?("#{attr}=")
-          send("#{attr}=", model)
+        element = to_element(model)
+        if respond_to?("#{element}=")
+          send("#{element}=", model)
         else
           raise TransForms::NotImplementedError
         end
@@ -89,10 +89,21 @@ module TransForms
       # would have been the main model.
       def assert_record_on_error(e)
         if e.respond_to?(:record) && e.record.present?
-          record_name = e.record.class.name.underscore
-          if main_models.is_a?(Array) && main_models.include?(record_name.to_sym) && send(record_name).nil?
-            send("#{record_name}=", e.record)
+          element = to_element(e.record)
+          if main_models.is_a?(Array) && main_models.include?(element.to_sym) && send(element).nil?
+            send("#{element}=", e.record)
           end
+        end
+      end
+
+      # A method to retrieve the underscored version of a record's class name.
+      # The procedure is slightly different in Rails 3 and Rails 4, that's what
+      # this method takes into consideration.
+      def to_element(record)
+        if record.class.model_name.is_a?(ActiveModel::Name)
+          record.class.model_name.element
+        else
+          record.class.model_name.underscore
         end
       end
 
