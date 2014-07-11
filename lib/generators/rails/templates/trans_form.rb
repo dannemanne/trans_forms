@@ -19,16 +19,13 @@ class <%= class_name %>
   #   validates :name,  presence: true
   #   validates :age,   numericality: { greater_than_or_equal_to: 18 }
 
-private
-  def persist!
-    transaction do
-      # Perform all actions inside this block. If anything goes wrong, i.e. an
-      # an error is raised because of validation errors, then everything that
-      # has already been done inside this block is rolled back.
-      #
-      #   self.user = User.create!(name: name, age: age, phone_no: phone_no)
+  transaction do
+    # Perform all actions inside this block. If anything goes wrong, i.e. an
+    # an error is raised because of validation errors, then everything that
+    # has already been done inside this block is rolled back.
+    #
+    #   self.user = User.create!(name: name, age: age, phone_no: phone_no)
 
-    end
   end
 
 end
