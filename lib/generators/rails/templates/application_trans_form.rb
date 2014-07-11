@@ -6,7 +6,7 @@ class ApplicationTransForm < TransForms::FormBase
   # a model and current_user attributes in addition to the params
   # which might come directly from the controller.
   #
-  #   def new_in_model(model, params = {}, current_user = nil)
+  #   def self.new_in_model(model, params = {}, current_user = nil)
   #     new(params.merge(model: model, current_user: current_user))
   #   end
 
