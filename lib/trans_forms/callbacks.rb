@@ -5,7 +5,6 @@ module TransForms
     extend ActiveSupport::Concern
 
     included do
-      puts self.inspect
       class_attribute :_tf_cb
     end
 
