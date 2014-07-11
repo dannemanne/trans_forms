@@ -4,7 +4,6 @@ class <%= class_name %> < <%= parent_class_name %>
   <%- else -%>
 class <%= class_name %>
   <%- end -%>
-  delegate_all
 
   # Define the attributes available for this specific form model. The attributes
   # are declared according to the Virtus standard
