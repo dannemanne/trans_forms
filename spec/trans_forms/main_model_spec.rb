@@ -20,16 +20,16 @@ module TransForms
       end
     end
 
-    describe 'new_in_model' do
+    describe 'model accessor' do
       it 'can initialize a form model and automatically set the accessor defined by main_models' do
         expect(UserUpdater.main_models).to eq [:user]
-        form = UserUpdater.new_in_model(user)
+        form = UserUpdater.new(model: user)
         expect(form.user).to eq user
       end
 
       it 'raises an error if the model supplied is not of a type included in main_models' do
         expect(UserUpdater.main_models).to eq [:user]
-        expect { UserUpdater.new_in_model(phone_number) }.to raise_error
+        expect { UserUpdater.new(model: phone_number) }.to raise_error
       end
     end
 
@@ -37,7 +37,7 @@ module TransForms
       it 'returns an array of all values set on the accessors defined by set_main_model, excluding nil values' do
         expect(MultipleRecordsMainModel.main_models).to eq [:user, :phone_number]
 
-        form = MultipleRecordsMainModel.new_in_model(user)
+        form = MultipleRecordsMainModel.new(model: user)
         expect(form.user).to eq user
         expect(form.phone_number).to be_nil
         expect(form.main_instances).to eq [user]
