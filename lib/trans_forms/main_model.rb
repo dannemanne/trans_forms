@@ -108,15 +108,6 @@ module TransForms
         end
       end
 
-      module ClassMethods
-
-        # This method will initialize the form model with a specific record
-        # set as the main model.
-        def new_in_model(model, params = {})
-          new(params.merge(model: model))
-        end
-
-      end
     end
   end
 end
