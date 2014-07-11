@@ -6,6 +6,7 @@ module TransForms
 
       # This method will extend the BaseForm functionality with the
       # TransForms::MainModel::Active module.
+      alias_method :set_main_model, :set_main_models
       def set_main_models(*models)
         unless self < TransForms::MainModel::Active
           include TransForms::MainModel::Active
