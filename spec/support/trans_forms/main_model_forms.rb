@@ -3,7 +3,7 @@ class MainModelModel
 end
 
 class UserUpdater < TransForms::FormBase
-  set_main_models :user
+  set_main_model :user
 
   attribute :name,  String
 
@@ -14,8 +14,4 @@ class UserUpdater < TransForms::FormBase
     user.save!
   end
 
-end
-
-class MultipleRecordsMainModel < TransForms::FormBase
-  set_main_models :user, :phone_number
 end

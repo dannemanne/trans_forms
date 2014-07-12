@@ -6,21 +6,14 @@ module TransForms
 
       # This method will extend the BaseForm functionality with the
       # TransForms::MainModel::Active module.
-      def set_main_models(*models)
-        unless self < TransForms::MainModel::Active
-          include TransForms::MainModel::Active
+      def set_main_model(model, options = {})
+        include TransForms::MainModel::Active
 
-          class_attribute :main_models
-          self.main_models = []
-        end
+        class_attribute :main_model
+        self.main_model = model
 
-        self.main_models += models
-
-        models.each do |model|
-          attr_accessor model
-        end
+        attr_accessor model
       end
-      alias_method :set_main_model, :set_main_models
 
     end
 
@@ -38,8 +31,8 @@ module TransForms
 
       # Called from FormError to collect error messages from all possible
       # models involved in the form transation.
-      def main_instances
-        main_models.map { |record_name| send(record_name) }.compact
+      def main_instance
+        send main_model
       end
 
       # Combines the errors from the FormModel as well as the main model instances
@@ -91,7 +84,7 @@ module TransForms
       def assert_record_on_error(e)
         if e.respond_to?(:record) && e.record.present?
           element = to_element(e.record)
-          if main_models.is_a?(Array) && main_models.include?(element.to_sym) && send(element).nil?
+          if main_model == element.to_sym && send(element).nil?
             send("#{element}=", e.record)
           end
         end
@@ -106,6 +99,25 @@ module TransForms
         else
           record.class.model_name.underscore
         end
+      end
+
+      module ClassMethods
+
+        # Adds a custom +model_name+ method to acts as a proxy to whatever class
+        # is specified to be the main_model. This makes it possible to send the
+        # form models to url_helpers etc, and still
+        def model_name
+          @_model_name ||= begin
+            klass =
+                if respond_to?(:main_model)
+                  main_models.first.to_s.classify.constantize
+                else
+                  self
+                end
+            ActiveModel::Name.new(klass)
+          end
+        end
+
       end
 
     end
