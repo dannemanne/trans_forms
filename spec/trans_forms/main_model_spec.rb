@@ -5,7 +5,7 @@ module TransForms
     let(:user) { User.create(name: 'John') }
     let(:phone_number) { PhoneNumber.create(user_id: user.id, number: '+1-555-MY-NUMBER') }
 
-    describe 'set_main_models' do
+    describe 'set_main_model' do
       it 'defines accessor attributes for main model and stores them in a class attribute' do
         form = MainModelModel.new
         expect{ form.user }.to raise_error
@@ -21,7 +21,7 @@ module TransForms
     end
 
     describe 'model accessor' do
-      it 'can initialize a form model and automatically set the accessor defined by main_models' do
+      it 'can initialize a form model and automatically set the accessor defined by main_model' do
         expect(UserUpdater.main_model).to eq :user
         form = UserUpdater.new(model: user)
         expect(form.user).to eq user

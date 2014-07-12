@@ -110,7 +110,7 @@ module TransForms
           @_model_name ||= begin
             klass =
                 if respond_to?(:main_model)
-                  main_models.first.to_s.classify.constantize
+                  main_model.to_s.classify.constantize
                 else
                   self
                 end
