@@ -32,6 +32,13 @@ module TransForms
         expect { UserUpdater.new(model: phone_number) }.to raise_error
       end
     end
+
+    describe 'model_name' do
+      it 'does not raise an error when raised' do
+        #TODO: Improve this spec
+        expect { UserUpdater.model_name }.not_to raise_error
+      end
+    end
   end
 
 end

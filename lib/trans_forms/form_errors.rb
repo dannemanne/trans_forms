@@ -7,7 +7,7 @@ module TransForms
     end
 
     def error_models
-      [original, form_model.main_instance.errors].compact
+      [original, form_model.main_instance.try(:errors)].compact
     end
 
     def full_messages
