@@ -21,7 +21,7 @@ module TransForms
       it 'proxies +model_name+ method to the main_model when proxy: true is set' do
         expect(UserProxyModel.main_model).to eq :user
         expect(UserProxyModel.name).to eq 'UserProxyModel'
-        expect(UserProxyModel.model_name.name).to eq 'User'
+        expect(UserProxyModel.model_name).to eq 'User'
       end
     end
 
