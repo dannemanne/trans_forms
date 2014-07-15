@@ -35,9 +35,33 @@ Or install it yourself as:
 
     $ gem install trans_forms
 
-## Usage
+## Writing Form Models
 
-TODO: Write usage instructions here
+Form Models inherit from `TransForms::FormBase` and live in the `app/trans_forms`
+directory of your application.
+
+    # app/trans_forms/post_form.rb
+    class PostForm < TransForms::FormBase
+      # ...
+    end
+
+### Generators
+
+To manually generate a Form Model, you can run...
+
+    rails g trans_form PostForm
+
+... to create a `PostForm` Form Model.
+
+### Shared Form Model Methods
+
+You might want to add some default functionality to all your Form Models. The common
+practice to accomplish this is to have an application specific model that inherits
+from the FormBase. Then you have all of your FormModels inherit from this model instead.
+
+You can generate a default model like this by running:
+
+TODO: Add generator
 
 ## Contributing
 
