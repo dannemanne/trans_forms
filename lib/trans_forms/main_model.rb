@@ -9,10 +9,17 @@ module TransForms
       def set_main_model(model, options = {})
         include TransForms::MainModel::Active
 
+        # Stores the main_model record in a class_attribute
         class_attribute :main_model
         self.main_model = model
 
+        # Defines an instance accessor for the main_model
         attr_accessor model
+
+        # Implements proxy module that overwrites model_name method
+        # to instead return an ActiveModel::Mame class for the
+        # main_model class
+        include TransForms::MainModel::Proxy if options[:proxy]
       end
 
     end
@@ -99,25 +106,6 @@ module TransForms
         else
           record.class.model_name.underscore
         end
-      end
-
-      module ClassMethods
-
-        # Adds a custom +model_name+ method to acts as a proxy to whatever class
-        # is specified to be the main_model. This makes it possible to send the
-        # form models to url_helpers etc, and still
-        def model_name
-          @_model_name ||= begin
-            klass =
-                if respond_to?(:main_model)
-                  main_model.to_s.classify.constantize
-                else
-                  self
-                end
-            ActiveModel::Name.new(klass)
-          end
-        end
-
       end
 
     end
