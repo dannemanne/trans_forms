@@ -21,7 +21,9 @@ module TransForms
       save || (raise ActiveRecord::RecordInvalid)
     end
 
-    # ActiveModel support
+    # ActiveModel support.
+    # Note that these methods will be overwritten if the +proxy+ option
+    # is enabled in the call to +set_main_model+
     def persisted?; false end
     def to_key; nil end
 

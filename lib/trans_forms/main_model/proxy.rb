@@ -7,6 +7,30 @@ module TransForms
       # and controllers handle the form model as if it were
       # the main model itself
 
+      def persisted?
+        respond_to?(:main_instance) && main_instance && main_instance.persisted?
+      end
+
+      # Returns an Enumerable of all key attributes of the main instanceif any is
+      # set, regardless if the object is persisted or not. Returns +nil+ if there
+      # is no main_instance or if main_instance have no key attributes.
+      #
+      #   class UserForm < TransForms::BaseForm
+      #     set_main_model :user, proxy: true
+      #   end
+      #
+      #   form = UserForm.new
+      #   form.to_key # => nil
+      #
+      #   form.user = User.new
+      #   form.to_key # => nil
+      #
+      #   form.user.save # => true
+      #   form.to_key # => [1]
+      def to_key
+        respond_to?(:main_instance) && main_instance && main_instance.to_key
+      end
+
       module ClassMethods
 
         # Returns an ActiveModel::Name object for module. It can be
