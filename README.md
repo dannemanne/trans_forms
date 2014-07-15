@@ -63,6 +63,22 @@ You can generate a default model like this by running:
 
 TODO: Add generator
 
+This will add an `ApplicationTransForm` model...
+
+    # app/trans_forms/application_trans_form.rb
+    class ApplicationTransForm < TransForms::FormBase
+      # ...
+    end
+
+... that you can use in you Form Models:
+
+    class PostForm < ApplicationTransForm
+      # ...
+    end
+
+Note that by having a model with the exact name `ApplicationTransForm`, the generator
+for new Form Models will by default inherit from that model instead of the `TransForm::FormBase`
+
 ## Contributing
 
 1. Fork it ( https://github.com/dannemanne/trans_forms/fork )
