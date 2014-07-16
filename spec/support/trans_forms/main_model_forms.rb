@@ -25,3 +25,13 @@ end
 class UserProxyModel < TransForms::FormBase
   set_main_model :user, proxy: true
 end
+
+class UserProxyAllModel < TransForms::FormBase
+  ATTR_ARG = :all
+  set_main_model :user, proxy: { attributes: ATTR_ARG }
+end
+
+class UserProxySelectModel < TransForms::FormBase
+  ATTR_ARG = %w(name)
+  set_main_model :user, proxy: { attributes: ATTR_ARG }
+end

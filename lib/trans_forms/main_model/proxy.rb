@@ -32,6 +32,59 @@ module TransForms
       end
 
       module ClassMethods
+        RESERVED_COLUMN_NAMES = %w(id created_at updated_at)
+        REJECT_COLUMN_PROC = Proc.new { |c| RESERVED_COLUMN_NAMES.include?(c.name) }
+
+        # Configures the proxy setup. Called from +set_main_model+ when
+        # the option :proxy was supplied. +proxy_options+ will be the value
+        # for that :proxy key.
+        #
+        # If +proxy
+        def configure_proxy(proxy_options)
+          if proxy_options.is_a?(Hash)
+            set_proxy_attributes proxy_options[:attributes] if proxy_options[:attributes]
+          end
+        end
+
+        # If +attributes+ is the Boolean value TRUE then we will proxy all
+        # of the attributes from the main_model class except for a few
+        # reserved attributes.
+        #
+        # But if +attributes+ is an array then we only proxy those attributes
+        # listed in the array. If any of the attributes listed in the array is
+        # not an actual attribute of the main model then an Error will be
+        # raised.
+        def set_proxy_attributes(attributes)
+          if attributes == :all
+            proxy_columns main_class.columns.reject(&REJECT_COLUMN_PROC)
+          elsif attributes.is_a?(Array)
+            attr_names = attributes.map(&:to_s)
+            proxy_columns main_class.columns.reject(&REJECT_COLUMN_PROC).select { |c| attr_names.include?(c.name) }
+          end
+        end
+
+        # Given a set of ActiveRecord Columns, will setup attributes according
+        # to the Virtus standard that will have the default value of the main
+        # instance record.
+        def proxy_columns(columns)
+          columns.each do |column|
+            if (type = column_type(column.type)).present?
+              attribute column.name,  type, default: proc { |f| f.main_instance.send(column.name) }
+            end
+          end
+        end
+
+        # Returns a Class for the specific column type.
+        def column_type(type)
+          case type
+            when :integer                     then Integer
+            when :float, :decimal             then Float
+            when :string, :text               then String
+            when :datetime, :timestamp, :time then DateTime
+            when :date                        then Date
+            when :boolean                     then Boolean
+          end
+        end
 
         # Returns an ActiveModel::Name object for module. It can be
         # used to retrieve all kinds of naming-related information

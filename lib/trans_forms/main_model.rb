@@ -6,6 +6,35 @@ module TransForms
 
       # This method will extend the BaseForm functionality with the
       # TransForms::MainModel::Active module.
+      #
+      # The +model+ argument is a symbol in the underscore format
+      # of a Class name, i.e. +:post+ or +:product_group+
+      #
+      # The +options+ argument is a Hash that can have the following
+      # options set:
+      #
+      # +:proxy+
+      #   With proxy defined, the method +model_name+, +to_key+ and
+      #   +persisted?+ will refer to the main_model and main_instance
+      #   instead of the Form Model.
+      #
+      #   class PostForm < TransForms::FormBase
+      #     set_main_model :post, proxy: true
+      #   end
+      #
+      #   You can also configure the proxy further by defining the
+      #   +attributes+ option inside the proxy. If the value is +:all+
+      #   then it will define all the columns of the main model. But
+      #   you can also set the value to an array with the names of the
+      #   columns you wish to proxy:
+      #
+      #   class PostForm < TransForms::FormBase
+      #     set_main_model :post, proxy: { attributes: :all }
+      #   end
+      #
+      #   class PostForm < TransForms::FormBase
+      #     set_main_model :post, proxy: { attributes: %w(title body status) }
+      #   end
       def set_main_model(model, options = {})
         include TransForms::MainModel::Active
 
@@ -19,7 +48,11 @@ module TransForms
         # Implements proxy module that overwrites model_name method
         # to instead return an ActiveModel::Mame class for the
         # main_model class
-        include TransForms::MainModel::Proxy if options[:proxy]
+        if options[:proxy]
+          include TransForms::MainModel::Proxy
+
+          configure_proxy options[:proxy]
+        end
       end
 
     end
@@ -106,6 +139,16 @@ module TransForms
         else
           record.class.model_name.underscore
         end
+      end
+
+
+      module ClassMethods
+
+        # Returns the class of the main_model
+        def main_class
+          @main_class ||= main_model.to_s.classify.constantize
+        end
+
       end
 
     end

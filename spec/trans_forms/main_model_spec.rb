@@ -19,7 +19,7 @@ module TransForms
         expect(MainModelModel.main_model).to eq :user
       end
 
-      describe 'option { proxy: true }' do
+      describe 'option[:proxy]' do
         it 'proxies +model_name+ method to the main_model' do
           expect(UserProxyModel.main_model).to eq :user
           expect(UserProxyModel.name).to eq 'UserProxyModel'
@@ -42,6 +42,24 @@ module TransForms
           form.user = User.create!(name: 'John Doe')
           expect(form.user.to_key).not_to be nil
           expect(form.to_key).to eq form.user.to_key
+        end
+        it 'defines attributes for all non-reserved column names of the main model' do
+          # ATTR_ARG is defined in test model, just to make
+          # sure we test with a correct model.
+          expect(UserProxyAllModel::ATTR_ARG).to eq :all
+          expect(UserProxyAllModel.main_class).to eq User
+          expect(UserProxyAllModel.attribute_set.each.map(&:name).map(&:to_s)).to eq User.columns.reject { |c| %w(id created_at updated_at).include?(c.name) }.map(&:name)
+        end
+        it 'defines attributes for the specified columns' do
+          # ATTR_ARG is defined in test model, just to make
+          # sure we test with a correct model.
+          expect(UserProxySelectModel::ATTR_ARG).to eq %w(name)
+          expect(UserProxySelectModel.main_class).to eq User
+          expect(UserProxySelectModel.attribute_set.each.map(&:name).map(&:to_s)).to eq %w(name)
+        end
+        it 'sets the default value of an attribute to the corresponding attribute of the main instance' do
+          form = UserProxyAllModel.new(model: user)
+          expect(form.name).to eq user.name
         end
       end
     end
