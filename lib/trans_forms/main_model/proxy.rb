@@ -82,7 +82,7 @@ module TransForms
             when :string, :text               then String
             when :datetime, :timestamp, :time then DateTime
             when :date                        then Date
-            when :boolean                     then Boolean
+            when :boolean                     then Virtus::Attribute::Boolean # Boolean is not a standard Ruby class
           end
         end
 
