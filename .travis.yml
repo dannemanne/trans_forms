@@ -13,4 +13,4 @@ gemfile:
   - gemfiles/4.1.gemfile
 
 script:
-  - bundle exec rake
+  - CODECLIMATE_REPO_TOKEN=c815cc06c282d0eec6709c751088034096c5ff87678018ff4147e4220a0adddd bundle exec rake

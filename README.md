@@ -1,5 +1,6 @@
 [![Build Status](https://travis-ci.org/dannemanne/trans_forms.svg?branch=master)](https://travis-ci.org/dannemanne/trans_forms)
 [![Code Climate](https://codeclimate.com/github/dannemanne/trans_forms.png)](https://codeclimate.com/github/dannemanne/trans_forms)
+[![Test Coverage](https://codeclimate.com/github/dannemanne/trans_forms/coverage.png)](https://codeclimate.com/github/dannemanne/trans_forms)
 
 # TransForms
 
