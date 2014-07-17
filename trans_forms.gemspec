@@ -20,10 +20,10 @@ Gem::Specification.new do |s|
   s.required_ruby_version = '~> 1.9.3'
 
   s.add_dependency 'virtus'
-  s.add_dependency 'activemodel', '>= 3.0.0'
-  s.add_dependency 'activesupport', '>= 3.0.0'
+  s.add_dependency 'activemodel', '>= 3.1.0'
+  s.add_dependency 'activesupport', '>= 3.1.0'
 
-  s.add_development_dependency 'activerecord', '>= 3.0.0'
+  s.add_development_dependency 'activerecord', '>= 3.1.0'
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
   s.add_development_dependency 'rspec-rails'
