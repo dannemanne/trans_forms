@@ -1,8 +1,8 @@
+# TransForms
+[![Gem Version](https://badge.fury.io/rb/trans_forms.svg)](http://badge.fury.io/rb/trans_forms)
 [![Build Status](https://travis-ci.org/dannemanne/trans_forms.svg?branch=master)](https://travis-ci.org/dannemanne/trans_forms)
 [![Code Climate](https://codeclimate.com/github/dannemanne/trans_forms.png)](https://codeclimate.com/github/dannemanne/trans_forms)
 [![Test Coverage](https://codeclimate.com/github/dannemanne/trans_forms/coverage.png)](https://codeclimate.com/github/dannemanne/trans_forms)
-
-# TransForms
 
 TransForms is short for Transactional Forms. I created it mainly because I felt that
 the ActiveRecord Models all to often get cluttered with a lot of conditional validations
