@@ -1,5 +1,5 @@
 *.gem
-*.json
+coverage
 .bundle
 .idea
 Gemfile.lock
