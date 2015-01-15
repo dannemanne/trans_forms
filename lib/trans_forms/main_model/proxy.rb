@@ -69,7 +69,8 @@ module TransForms
         def proxy_columns(columns)
           columns.each do |column|
             if (type = column_type(column.type)).present?
-              attribute column.name,  type, default: proc { |f| f.main_instance.send(column.name) }
+              # When setting the default value, note that +main_instance+ might be nil, so we have to use +try+
+              attribute column.name,  type, default: proc { |f| f.main_instance.try(column.name) }
             end
           end
         end
