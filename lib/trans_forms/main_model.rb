@@ -70,7 +70,7 @@ module TransForms
       end
 
       # Called from FormError to collect error messages from all possible
-      # models involved in the form transation.
+      # models involved in the form transaction.
       def main_instance
         send main_model
       end
