@@ -44,5 +44,33 @@ module TransForms
       false
     end
 
+    # A method to to use when you want to redirect any errors raised to a
+    # specific attribute. It requires a block and any ActiveRecordErrors
+    # that are raised within this block will be assigned to the Form Models
+    # FormErrors instance for the key specified by +attr+.
+    #
+    #   class ArticleCreator < ApplicationTransForm
+    #     attribute :author_name
+    #     ...
+    #
+    #     transaction do
+    #       all_errors_to(:author_name) do
+    #         # If this following statement raises an ActiveRecordError, then
+    #         # that error message will be stored on the attribute :author_name
+    #         Author.create!(name: author_name)
+    #       end
+    #
+    #       ...
+    #     end
+    #   end
+    #
+    def all_errors_to(attr)
+      raise 'No block given' unless block_given?
+      yield
+    rescue ActiveRecord::ActiveRecordError => e
+      errors[attr] = e.message
+      raise e
+    end
+
   end
 end

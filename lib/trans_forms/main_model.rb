@@ -70,14 +70,14 @@ module TransForms
       end
 
       # Called from FormError to collect error messages from all possible
-      # models involved in the form transation.
+      # models involved in the form transaction.
       def main_instance
         send main_model
       end
 
       # Combines the errors from the FormModel as well as the main model instances
       def errors
-        @errors ||= FormErrors.new(self, super)
+        @errors ||= FormErrors.new(self)
       end
 
       # In it's default implementation, this method will look at the class name
