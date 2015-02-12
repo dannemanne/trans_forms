@@ -11,6 +11,12 @@ module TransForms
         respond_to?(:main_instance) && main_instance && main_instance.persisted?
       end
 
+      # In case the Main Model has implemented custom +to_param+ method, we need
+      # to make sure we use it here as well
+      def to_param
+        respond_to?(:main_instance) && main_instance && main_instance.to_param || super
+      end
+
       # Returns an Enumerable of all key attributes of the main instanceif any is
       # set, regardless if the object is persisted or not. Returns +nil+ if there
       # is no main_instance or if main_instance have no key attributes.
