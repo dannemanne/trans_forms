@@ -39,8 +39,11 @@ module TransForms
         include TransForms::MainModel::Active
 
         # Stores the main_model record in a class_attribute
-        class_attribute :main_model
+        class_attribute :main_model, :_class_name
         self.main_model = model
+
+        # If model is in namespace then it might be needed to specify manually
+        self._class_name = options[:class_name] if options.has_key?(:class_name)
 
         # Defines an instance accessor for the main_model
         attr_accessor model
@@ -146,7 +149,12 @@ module TransForms
 
         # Returns the class of the main_model
         def main_class
-          @main_class ||= main_model.to_s.classify.constantize
+          @main_class ||=
+              if _main_class.present?
+                _main_class.constantize
+              else
+                main_model.to_s.classify.constantize
+              end
         end
 
       end
