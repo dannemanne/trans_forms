@@ -150,8 +150,8 @@ module TransForms
         # Returns the class of the main_model
         def main_class
           @main_class ||=
-              if _main_class.present?
-                _main_class.constantize
+              if _class_name.present?
+                _class_name.constantize
               else
                 main_model.to_s.classify.constantize
               end
