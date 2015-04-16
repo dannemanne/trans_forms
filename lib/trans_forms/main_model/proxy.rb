@@ -107,7 +107,7 @@ module TransForms
         #   PostForm.model_name.plural   # => "posts"
         def model_name
           @_model_name ||= begin
-            klass = respond_to?(:main_model) ? main_model.to_s.classify.constantize : self
+            klass = respond_to?(:main_class) ? main_class : self
 
             namespace = klass.parents.detect do |n|
               n.respond_to?(:use_relative_model_naming?) && n.use_relative_model_naming?
