@@ -37,6 +37,11 @@ module TransForms
       end
     end
 
+    describe '#save!' do
+      let(:form) { ErrorInTransactionForm.new }
+      it { expect { form.save! }.to raise_error(ActiveRecord::RecordNotSaved) }
+    end
+
     describe 'transaction' do
       it 'saves multiple records to db when nothing raises errors' do
         attr = { name1: 'John', name2: 'Peter' }

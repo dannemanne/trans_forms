@@ -18,7 +18,7 @@ module TransForms
     end
 
     def save!
-      save || (raise ActiveRecord::RecordInvalid)
+      save || (raise ActiveRecord::RecordNotSaved)
     end
 
     # ActiveModel support.
