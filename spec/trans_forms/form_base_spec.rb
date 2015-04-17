@@ -26,20 +26,27 @@ module TransForms
     end
 
     describe '#save' do
-      it 'returns true when no errors occur inside the +transaction+ block' do
-        form = NoErrorInTransactionForm.new
-        expect(form.save).to be true
+      context 'when no errors occur inside +transaction+ block' do
+        let(:form) { NoErrorInTransactionForm.new }
+        it { expect( form.save ).to be true }
       end
 
-      it 'returns false when errors do occur inside the +transaction+ block' do
-        form = ErrorInTransactionForm.new
-        expect(form.save).to be false
+      context 'when errors do occur inside the +transaction+ block' do
+        let(:form) { ErrorInTransactionForm.new }
+        it { expect( form.save ).to be false }
       end
     end
 
     describe '#save!' do
-      let(:form) { ErrorInTransactionForm.new }
-      it { expect { form.save! }.to raise_error(ActiveRecord::RecordNotSaved) }
+      context 'when no errors occur inside +transaction+ block' do
+        let(:form) { NoErrorInTransactionForm.new }
+        it { expect( form.save! ).to be true }
+      end
+
+      context 'when errors do occur inside the +transaction+ block' do
+        let(:form) { ErrorInTransactionForm.new }
+        it { expect { form.save! }.to raise_error(ActiveRecord::RecordNotSaved) }
+      end
     end
 
     describe 'transaction' do
