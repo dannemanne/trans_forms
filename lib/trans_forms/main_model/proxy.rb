@@ -7,6 +7,11 @@ module TransForms
       # and controllers handle the form model as if it were
       # the main model itself
 
+      # Dependency for the Proxy Module. Usually this is already
+      # included before Proxy is included, but we make sure it
+      # is present by including it from here as well.
+      include ::TransForms::MainModel::Active
+
       def persisted?
         respond_to?(:main_instance) && main_instance && main_instance.persisted?
       end

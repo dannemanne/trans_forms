@@ -39,7 +39,6 @@ module TransForms
         include TransForms::MainModel::Active
 
         # Stores the main_model record in a class_attribute
-        class_attribute :main_model, :_class_name
         self.main_model = model
 
         # If model is in namespace then it might be needed to specify manually
@@ -70,6 +69,9 @@ module TransForms
         # anyway. If this module is included manually (like in one of the specs) then
         # it prevents any error to occur.
         after_save_on_error :assert_record_on_error if respond_to?(:after_save_on_error)
+
+        # Adding class attributes to store model and options for each usage.
+        class_attribute :main_model, :_class_name
       end
 
       # Called from FormError to collect error messages from all possible

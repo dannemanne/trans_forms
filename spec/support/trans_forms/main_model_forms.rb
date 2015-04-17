@@ -3,9 +3,8 @@ class MainModelModel
 end
 
 class ProxyModel
-  class_attribute :main_model
-  self.main_model = :user
   include TransForms::MainModel::Proxy
+  self.main_model = :user
 end
 
 class UserUpdater < TransForms::FormBase
