@@ -82,7 +82,7 @@ module TransForms
 
       # Combines the errors from the FormModel as well as the main model instances
       def errors
-        @errors ||= FormErrors.new(self)
+        @errors ||= TransForms::FormErrors.new(self)
       end
 
       # In it's default implementation, this method will look at the class name
