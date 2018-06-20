@@ -12,12 +12,11 @@ Gem::Specification.new do |s|
   s.version     = TransForms::VERSION
   s.date        = '2014-07-08'
 
-  s.files         = `git ls-files`.split("\n")
-  s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
-  s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
+  s.files         = Dir['{lib}/**/*'] + ['README.md']
+  s.test_files    = Dir['{spec}/**/*']
   s.require_paths = ['lib']
 
-  s.required_ruby_version = '~> 1.9.3'
+  s.required_ruby_version = '>= 1.9.3'
 
   s.add_dependency 'virtus'
   s.add_dependency 'activemodel', '>= 3.1.0'

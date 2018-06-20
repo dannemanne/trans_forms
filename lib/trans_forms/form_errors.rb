@@ -32,5 +32,11 @@ module TransForms
       arr
     end
 
+    def each(&block)
+      error_models.each do |model|
+        model.each(&block)
+      end
+    end
+
   end
 end
