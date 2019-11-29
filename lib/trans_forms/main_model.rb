@@ -74,8 +74,7 @@ module TransForms
         class_attribute :main_model, :_class_name
       end
 
-      # Called from FormError to collect error messages from all possible
-      # models involved in the form transaction.
+      # Instance method to retrieve the current main model instance
       def main_instance
         send main_model
       end

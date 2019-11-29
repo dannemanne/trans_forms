@@ -91,10 +91,12 @@ module TransForms
           case type
             when :integer                     then Integer
             when :float, :decimal             then Float
-            when :string, :text               then String
+            when :string, :text, :uuid        then String
             when :datetime, :timestamp, :time then DateTime
             when :date                        then Date
             when :boolean                     then Virtus::Attribute::Boolean # Boolean is not a standard Ruby class
+            else
+              raise "Could not match column type '#{type}' for #{model_name}"
           end
         end
 

@@ -13,18 +13,22 @@ module TransForms
 
     include TransForms::Callbacks
 
+    attr_accessor :_last_error
+
     def save
       valid? && run_transaction
     end
 
     def save!
-      save || (raise ActiveRecord::RecordNotSaved)
+      valid? || raise(ActiveRecord::RecordInvalid.new(self))
+      save || (_last_error && raise(_last_error) || raise(ActiveRecord::RecordNotSaved))
     end
 
     # ActiveModel support.
     # Note that these methods will be overwritten if the +proxy+ option
     # is enabled in the call to +set_main_model+
     def persisted?; false end
+    def new_record?; !persisted? end
     def to_key; nil end
 
   protected
@@ -41,13 +45,19 @@ module TransForms
     rescue ActiveRecord::ActiveRecordError => e
       # Triggers callback
       after_save_on_error_callback e
+      self._last_error = e
+      if e.respond_to?(:record)
+        e.record.errors.each do |attribute, message|
+          errors.add(attribute, message)
+        end
+      end
       false
     end
 
     # A method to to use when you want to redirect any errors raised to a
     # specific attribute. It requires a block and any ActiveRecordErrors
     # that are raised within this block will be assigned to the Form Models
-    # FormErrors instance for the key specified by +attr+.
+    # Errors instance for the key specified by +attr+.
     #
     #   class ArticleCreator < ApplicationTransForm
     #     attribute :author_name
