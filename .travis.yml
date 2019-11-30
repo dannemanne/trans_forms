@@ -1,3 +1,7 @@
+env:
+  global:
+    - CC_TEST_REPORTER_ID=53bbc0016956800e24018717
+
 language: ruby
 
 rvm:
@@ -11,5 +15,13 @@ gemfile:
   - gemfiles/4.0.gemfile
   - gemfiles/4.1.gemfile
 
+before_script:
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+
 script:
-  - CODECLIMATE_REPO_TOKEN=c815cc06c282d0eec6709c751088034096c5ff87678018ff4147e4220a0adddd bundle exec rake
+  - bundle exec rake
+
+after_script:
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
