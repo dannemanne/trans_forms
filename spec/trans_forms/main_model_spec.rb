@@ -8,8 +8,8 @@ module TransForms
     describe 'set_main_model' do
       it 'defines accessor attributes for main model and stores them in a class attribute' do
         form = MainModelModel.new
-        expect{ form.user }.to raise_error
-        expect{ form.user = User.new }.to raise_error
+        expect{ form.user }.to raise_error(NoMethodError)
+        expect{ form.user = User.new }.to raise_error(NoMethodError)
 
         MainModelModel.set_main_model :user
         form = MainModelModel.new
@@ -73,7 +73,7 @@ module TransForms
 
       it 'raises an error if the model supplied is not the type of main model' do
         expect(UserUpdater.main_model).to eq :user
-        expect { UserUpdater.new(model: phone_number) }.to raise_error
+        expect { UserUpdater.new(model: phone_number) }.to raise_error(TransForms::NotImplementedError)
       end
     end
   end

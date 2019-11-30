@@ -10,7 +10,7 @@ module TransForms
 
         expect(form.name).to    eq(attr[:name])
         expect(form.age).to     eq(attr[:age])
-        expect { form.foo }.to  raise_error
+        expect { form.foo }.to  raise_error(NoMethodError)
       end
     end
 
@@ -43,9 +43,9 @@ module TransForms
         it { expect( form.save! ).to be true }
       end
 
-      context 'when errors do occur inside the +transaction+ block' do
+      context 'when active errors do occur inside the +transaction+ block' do
         let(:form) { ErrorInTransactionForm.new }
-        it { expect { form.save! }.to raise_error(ActiveRecord::RecordNotSaved) }
+        it { expect { form.save! }.to raise_error(ActiveRecord::ActiveRecordError) }
       end
     end
 
