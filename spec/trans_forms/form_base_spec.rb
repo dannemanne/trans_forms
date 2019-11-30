@@ -116,6 +116,23 @@ module TransForms
           expect{ subject }.to change{ User.count }.by 1
         end
       end
+
+      context 'when +set_main_model+ is used and main instance is raising an error inside the transaction' do
+        let(:user) { User.new }
+        let(:form) { UserProxyModel.new({ model: user, name: '' }) }
+
+        it { expect(subject).to be false }
+
+        it 'does not create a new User' do
+          expect{ subject }.not_to change{ User.count }
+        end
+
+        it 'does not create a new User' do
+          form.save
+
+          expect(form.errors).to eq user.errors
+        end
+      end
     end
 
   end

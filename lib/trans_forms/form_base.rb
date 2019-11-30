@@ -46,9 +46,9 @@ module TransForms
       # Triggers callback
       after_save_on_error_callback e
       self._last_error = e
-      if e.respond_to?(:record)
+      if e.respond_to?(:record) && errors != e.record.errors
         e.record.errors.each do |attribute, message|
-          errors.add(attribute, message)
+          errors.add(attribute, message) unless Array(errors[attribute]).include? message
         end
       end
       false

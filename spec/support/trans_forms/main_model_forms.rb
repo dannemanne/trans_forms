@@ -23,6 +23,11 @@ end
 
 class UserProxyModel < TransForms::FormBase
   set_main_model :user, proxy: true
+
+  transaction do
+    # Will raise error if User model is not valid
+    user.save!
+  end
 end
 
 class UserProxyAllModel < TransForms::FormBase
