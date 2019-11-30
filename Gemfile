@@ -6,7 +6,7 @@ gemspec
 group :development, :test do
   gem 'activerecord', '>= 3.1.0'
   gem 'rake'
-  gem 'sqlite3'
+  gem 'sqlite3', '1.4.1'
 end
 
 group :development do
