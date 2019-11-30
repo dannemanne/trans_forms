@@ -4,6 +4,8 @@ class UserCreator1 < TransForms::FormBase
   attribute :name,      String
   attribute :age,       Numeric
 
+  attr_accessor :extra_attribute
+
   validates :name, presence: true
 
   transaction do

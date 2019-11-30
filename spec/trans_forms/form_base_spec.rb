@@ -4,13 +4,37 @@ module TransForms
   describe FormBase do
 
     describe '#initialize' do
-      it 'assigns attributes defined by +attribute+' do
-        attr = { name: 'John Doe', age: 30, foo: 'bar' }
-        form = UserCreator1.new(attr)
+      subject { UserCreator1.new(attr) }
 
-        expect(form.name).to    eq(attr[:name])
-        expect(form.age).to     eq(attr[:age])
-        expect { form.foo }.to  raise_error(NoMethodError)
+      context 'when assigning attributes defined by +attribute+' do
+        let(:attr) { { name: 'John Doe', age: 30 } }
+
+        it { is_expected.to be_a UserCreator1 }
+
+        it 'assigns attributes and responds to method calls' do
+          expect(subject.name).to eq attr[:name]
+          expect(subject.age).to eq attr[:age]
+        end
+      end
+
+      context 'when assigning attributes defined by +attr_accessor+' do
+        let(:attr) { { extra_attribute: 'value' } }
+
+        it { is_expected.to be_a UserCreator1 }
+
+        it 'assigns and responds to method calls' do
+          expect(subject.extra_attribute).to eq attr[:extra_attribute]
+        end
+      end
+
+      context 'when assigning attributes that are not defined in any way' do
+        let(:attr) { { foo: 'bar' } }
+
+        it { is_expected.to be_a UserCreator1 }
+
+        it 'does not assign or respond to method call' do
+          expect { subject.foo }.to  raise_error(NoMethodError)
+        end
       end
     end
 
@@ -26,54 +50,71 @@ module TransForms
     end
 
     describe '#save' do
+      subject { form.save }
+
       context 'when no errors occur inside +transaction+ block' do
         let(:form) { NoErrorInTransactionForm.new }
-        it { expect( form.save ).to be true }
+
+        it { is_expected.to be true }
       end
 
       context 'when errors do occur inside the +transaction+ block' do
         let(:form) { ErrorInTransactionForm.new }
-        it { expect( form.save ).to be false }
+
+        it { is_expected.to be false }
       end
     end
 
     describe '#save!' do
+      subject { form.save! }
+
       context 'when no errors occur inside +transaction+ block' do
         let(:form) { NoErrorInTransactionForm.new }
-        it { expect( form.save! ).to be true }
+
+        it { is_expected.to be true }
       end
 
       context 'when active errors do occur inside the +transaction+ block' do
         let(:form) { ErrorInTransactionForm.new }
-        it { expect { form.save! }.to raise_error(ActiveRecord::ActiveRecordError) }
+
+        it { expect{ subject }.to raise_error(ActiveRecord::ActiveRecordError) }
       end
     end
 
     describe 'transaction' do
-      it 'saves multiple records to db when nothing raises errors' do
-        attr = { name1: 'John', name2: 'Peter' }
-        count = User.count
+      subject { form.save }
 
-        expect(MultipleRecordsCreator.new(attr).save).to be true
-        expect(User.count).to eq(count+2)
+      context 'when trying to create multiple records inside a transaction without errors' do
+        let(:form) { MultipleRecordsCreator.new(attr) }
+        let(:attr) { { name1: 'John', name2: 'Peter' } }
+
+        it { expect(subject).to be true }
+
+        it 'saves multiple records' do
+          expect{ subject }.to change{ User.count }.by 2
+        end
       end
 
-      it 'rollbacks both saves even if the first is successful and the last one raises an error' do
-        # First User is saved successfully, but last one will raise an
-        # error because of User class uniqueness validation on +name+
-        attr = { name1: 'John', name2: 'John' }
-        count = User.count
+      context 'when trying to create multiple records but second record fails to create because of validation error' do
+        let(:form) { MultipleRecordsCreator.new(attr) }
+        let(:attr) { { name1: 'John', name2: 'John' } }
 
-        expect(MultipleRecordsCreator.new(attr).save).to be false
-        expect(User.count).to eq(count)
+        it { expect(subject).to be false }
+
+        it 'rollbacks both saves' do
+          expect{ subject }.not_to change{ User.count }
+        end
       end
 
-      it 'does not cause rollback when save is not raising error (no !), even though it was not saved' do
-        attr = { name1: 'John', name2: 'John' }
-        count = User.count
+      context 'when trying to create multiple records and second record fails to create because of validations, but failed save did not raise error' do
+        let(:form) { MultipleRecordsCreatorNoBang.new(attr) }
+        let(:attr) { { name1: 'John', name2: 'John' } }
 
-        expect(MultipleRecordsCreatorNoBang.new(attr).save).to be true
-        expect(User.count).to eq(count+1) # Only one record saved
+        it { expect(subject).to be true }
+
+        it 'does not cause rollback and successfully saved the first record' do
+          expect{ subject }.to change{ User.count }.by 1
+        end
       end
     end
 
