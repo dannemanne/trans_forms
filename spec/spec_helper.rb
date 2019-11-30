@@ -15,7 +15,6 @@ require 'trans_forms'
 require 'support/schema'
 require 'support/models'
 require 'database_cleaner'
-require 'pry'
 
 Dir[File.expand_path('../support/trans_forms/*.rb', __FILE__)].each { |f| require f }
 
