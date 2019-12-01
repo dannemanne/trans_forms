@@ -39,13 +39,20 @@ module TransForms
     end
 
     describe 'validations' do
-      it 'is considered valid when validations pass' do
-        attr = { name: 'John Doe', age: 30 }
-        form = UserCreator1.new(attr)
-        expect(form).to     be_valid
+      subject { form.valid? }
 
-        form.name = ''
-        expect(form).not_to be_valid
+      context 'when validations pass' do
+        let(:form) { UserCreator1.new(attr) }
+        let(:attr) { { name: 'John Doe', age: 30 } }
+
+        it { is_expected.to be true }
+      end
+
+      context 'when validations fail' do
+        let(:form) { UserCreator1.new(attr) }
+        let(:attr) { { name: '', age: 30 } }
+
+        it { is_expected.to be false }
       end
     end
 
