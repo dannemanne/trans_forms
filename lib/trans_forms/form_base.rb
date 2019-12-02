@@ -42,15 +42,26 @@ module TransForms
         instance_eval &_transaction
         true
       end
-    rescue ActiveRecord::ActiveRecordError => e
-      # Triggers callback
-      after_save_on_error_callback e
-      self._last_error = e
-      if e.respond_to?(:record) && errors != e.record.errors
-        e.record.errors.each do |attribute, message|
-          errors.add(attribute, message) unless Array(errors[attribute]).include? message
+
+    rescue ActiveRecord::RecordInvalid, ActiveRecord::RecordNotSaved, ActiveRecord::RecordNotDestroyed => e
+      handle_transaction_error e do
+        if e.record.present? && errors != e.record.errors
+          e.record.errors.each do |attribute, message|
+            errors.add(attribute, message) unless Array(errors[attribute]).include? message
+          end
         end
       end
+
+    rescue ActiveRecord::ActiveRecordError => e
+      handle_transaction_error e
+    end
+
+    def handle_transaction_error(e)
+      self._last_error = e
+
+      yield if block_given?
+
+      after_save_on_error_callback e
       false
     end
 

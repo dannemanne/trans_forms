@@ -81,10 +81,28 @@ module TransForms
         it { is_expected.to be true }
       end
 
-      context 'when active errors do occur inside the +transaction+ block' do
+      context 'when active record errors do occur inside the +transaction+ block' do
         let(:form) { ErrorInTransactionForm.new }
 
         it { expect{ subject }.to raise_error(ActiveRecord::ActiveRecordError) }
+      end
+
+      context 'when RecordNotFound error occur inside the +transaction+ block' do
+        let(:form) { RecordNotFoundInTransactionForm.new }
+
+        it { expect{ subject }.to raise_error(ActiveRecord::RecordNotFound) }
+      end
+
+      context 'when RecordNotSaved error occur inside the +transaction+ block' do
+        let(:form) { RecordNotSavedInTransactionForm.new }
+
+        it { expect{ subject }.to raise_error(ActiveRecord::RecordNotSaved) }
+      end
+
+      context 'when RecordInvalid error occur inside the +transaction+ block' do
+        let(:form) { RecordInvalidInTransactionForm.new }
+
+        it { expect{ subject }.to raise_error(ActiveRecord::RecordInvalid) }
       end
     end
 
