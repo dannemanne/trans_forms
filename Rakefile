@@ -11,7 +11,7 @@ desc 'Run all specs'
 task 'spec' => 'spec:all'
 
 namespace 'spec' do
-  task 'all' => ['trans_forms', 'generators']
+  task 'all' => ['generators', 'trans_forms']
 
   def spec_task(name)
     desc "Run #{name} specs"
